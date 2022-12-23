@@ -1,0 +1,198 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #777;
+  padding: 30px; /*???*/
+  background-color: #bac8ff;
+}
+.container {
+  height: 55vh;
+  width: 55vw;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.heading {
+  margin-bottom: 20px;
+}
+
+.heading-primary {
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  color: white;
+}
+
+.heading-primary-main {
+  display: block;
+  text-align: center;
+  font-size: 60px;
+  font-weight: 400;
+  letter-spacing: 35px;
+}
+
+.heading-primary-sub {
+  /* color: white; */
+  font-style: italic;
+  display: block;
+  font-size: 20px;
+  /* font-weight: 700; */
+  letter-spacing: 17.4px;
+}
+
+.tracker {
+  display: flex;
+  justify-content: center;
+  /* background-color: #fff; */
+  /* border-radius: 20px; */
+}
+
+.btn,
+.btn:link,
+.btn:visited {
+  text-transform: capitalize;
+  letter-spacing: 1px;
+  text-decoration: none;
+  padding: 15px 40px;
+  display: inline-block;
+  border-radius: 100px;
+  transition: all 0.2s;
+  position: relative;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.015);
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-white {
+  background-color: #fff;
+  color: #777;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 20px 0;
+}
+
+/* Adding Session */
+.adding-session {
+  border-radius: 20px;
+  margin-top: 20px;
+}
+
+.adding-session--description {
+  margin-bottom: 5px;
+  letter-spacing: 1.2px;
+  color: #f8f9fa;
+}
+
+.adding-session input {
+  background-color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 0;
+  text-align: center;
+  color: #777;
+  border-radius: 2rem;
+  box-shadow: rgba(0, 0, 0, 0.045);
+}
+.adding-session input:focus {
+  outline: 5px solid rgba(247, 235, 252, 0.676);
+}
+.adding-session button:focus {
+  outline: 5px solid rgba(247, 235, 252, 0.676);
+}
+
+#hrs,
+#mins {
+  width: 90px;
+}
+
+.adding-session-form--btn {
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  box-shadow: rgba(0, 0, 0, 0.045);
+  padding: 10px 5px;
+}
+
+.btn-submit {
+  background-color: #fcc419;
+}
+.btn-start-stopwatch {
+  background-color: #ff6b6b;
+}
+.btn-total {
+  background-color: #5c7cfa;
+}
+.btn-clear {
+  background-color: #f8f9fa;
+  color: #777;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Adding activity Table */
+table {
+  /* font-family: arial, sans-serif; */
+  background-color: #fff;
+  margin: 20px 0;
+  border-collapse: collapse;
+  border-radius: 1.5em;
+  overflow: hidden;
+  width: 65%;
+}
+
+td,
+th {
+  text-align: center;
+  border: 1px solid #fff;
+  padding: 6px;
+}
+tr {
+  border-radius: 50px;
+}
+tr:nth-child(even) {
+  background-color: #edf2ff;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  /* margin-top: -10px; correct offset on first border spacing if desired */
+}
+td:first-child {
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+}
+td:last-child {
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
+}
+
+/* .stopwatch-section {
+  margin-bottom: 20px;
+} */

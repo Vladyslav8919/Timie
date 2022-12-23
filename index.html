@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="script.js"></script>
+    <title>The Timie | Track your working time</title>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="heading">
+          <h1 class="heading-primary heading-primary-main">Timie</h1>
+          <p class="heading-primary-sub">track your time easily</p>
+        </div>
+        <div class="header--btn-container">
+          <button class="btn btn-white btn--add-session">
+            Add recent session
+          </button>
+          <button class="btn btn-white btn--start-session">
+            Start new session
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="adding-session hidden">
+          <form class="adding-session-form">
+            <input
+              id="activity"
+              type="text"
+              placeholder="What have you done?"
+            />
+            <label for="hrs"></label>
+            <input id="hrs" type="number" max="24" placeholder="Hours" />
+            <input
+              id="mins"
+              type="number"
+              min="1"
+              max="60"
+              placeholder="Minutes"
+            />
+            <button class="adding-session-form--btn btn-submit">Submit</button>
+          </form>
+        </section>
+
+        <section class="tracker">
+          <table class="tracker-table"></table>
+        </section>
+        <button class="adding-session-form--btn btn-total hidden">
+          Get total time
+        </button>
+        <button class="adding-session-form--btn btn-clear hidden">Clear</button>
+
+        <div class="option-stopwatch hidden">
+          <p class="adding-session--description description--fill-in">
+            Fill in the fields above to add your recent session
+          </p>
+          <hr />
+          <p class="adding-session--description description--click-stopwatch">
+            Click the button
+            <button class="adding-session-form--btn btn-start-stopwatch">
+              Start a Stopwatch
+            </button>
+            to start a new session
+          </p>
+        </div>
+
+        <section class="stopwatch-section hidden">
+          <div class="stopwatch-face">
+            <span class="digit" id="hr"> 00</span>
+            <span class="txt">h</span>
+            <span class="digit" id="min"> 00</span>
+            <span class="txt">m</span>
+            <span class="digit" id="sec"> 00</span>
+            <span class="txt">s</span>
+          </div>
+          <div id="buttons">
+            <button class="btn" id="run-stopwatch">Start</button>
+            <button class="btn" id="stop-stopwatch">Stop</button>
+            <button class="btn" id="reset-stopwatch">Reset</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
