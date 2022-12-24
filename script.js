@@ -298,7 +298,6 @@ resetStopwatchBtn.addEventListener("click", function () {
   hour = 0;
   minute = 0;
   second = 0;
-  millisecond = 0;
   hr.innerHTML = "00";
   min.innerHTML = "00";
   sec.innerHTML = "00";
