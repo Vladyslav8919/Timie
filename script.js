@@ -18,6 +18,7 @@ const chartContainer = document.querySelector(".chart-container");
 let activities = [];
 let getTotal = false;
 let tags = [];
+let timieData;
 
 const getLocalStorage = function () {
   timieData = JSON.parse(localStorage.getItem("timie"));
