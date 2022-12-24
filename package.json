@@ -16,7 +16,6 @@
   },
   "homepage": "https://github.com/Vladyslav8919/Timie#readme",
   "dependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.20.11",
     "chart.js": "^4.1.1",
     "chartjs-plugin-datalabels": "^2.2.0"
   },
