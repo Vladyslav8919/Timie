@@ -15,14 +15,14 @@
         <div class="heading">
           <h1 class="heading-primary heading-primary-main">Timie</h1>
           <p class="heading-primary-sub">track your time easily</p>
+          <img class="hero-img" src="clock.png" alt="" />
         </div>
+
         <div class="header--btn-container">
-          <button class="btn btn-white btn--add-session">
-            Add recent session
-          </button>
-          <button class="btn btn-white btn--start-session">
+          <button class="btn btn-white btn--add-session">Start</button>
+          <!-- <button class="btn btn-white btn--start-session">
             Start new session
-          </button>
+          </button> -->
         </div>
       </header>
 
@@ -50,13 +50,14 @@
         <section class="tracker">
           <table class="tracker-table"></table>
         </section>
+
+        <button class="adding-session-form--btn btn-get-chart hidden">
+          Get Chart
+        </button>
         <button class="adding-session-form--btn btn-total hidden">
-          Get total time
+          Get Total Time
         </button>
         <button class="adding-session-form--btn btn-clear hidden">Clear</button>
-        <button class="adding-session-form--btn btn-get-chart hidden">
-          Get chart
-        </button>
         <div class="chart-container hidden">
           <canvas id="chart"></canvas>
         </div>

@@ -1,6 +1,6 @@
 const headerBtnContainer = document.querySelector(".header--btn-container");
 const addSessionBtn = document.querySelector(".btn--add-session");
-const startSessionBtn = document.querySelector(".btn--start-session");
+// const startSessionBtn = document.querySelector(".btn--start-session");
 const startStopwatchBtn = document.querySelector(".btn-start-stopwatch");
 const getTotalBtn = document.querySelector(".btn-total");
 const clearBtn = document.querySelector(".btn-clear");
@@ -24,7 +24,7 @@ headerBtnContainer.addEventListener("click", function (e) {
   if (btn.classList.contains("btn--add-session")) {
     optionStopwatch.classList.remove("hidden");
     btn.classList.add("hidden");
-    btn.nextElementSibling.classList.add("hidden");
+    // btn.nextElementSibling.classList.add("hidden");
     addingSession.classList.remove("hidden");
   }
 });
@@ -142,7 +142,7 @@ addingSessionForm.addEventListener("submit", function (e) {
   if (activities.length > 0) {
     getTotalBtn.classList.remove("hidden");
     getChartBtn.classList.remove("hidden");
-    clearBtn.textContent = "Clear all";
+    clearBtn.textContent = "Clear All";
   }
 
   formData();
@@ -331,9 +331,9 @@ resetStopwatchBtn.addEventListener("click", function () {
   sec.innerHTML = "00";
 });
 
-startSessionBtn.addEventListener("click", function () {
-  stopwatchSection.classList.remove("hidden");
-});
+// startSessionBtn.addEventListener("click", function () {
+//   stopwatchSection.classList.remove("hidden");
+// });
 startStopwatchBtn.addEventListener("click", function () {
   stopwatchSection.classList.remove("hidden");
 });
