@@ -1,6 +1,6 @@
 import Chart from "chart.js/auto";
-import ChartDataLabels from "chartjs-plugin-datalabels";
-Chart.register(ChartDataLabels);
+// import ChartDataLabels from "chartjs-plugin-datalabels";
+// Chart.register(ChartDataLabels);
 
 export const getChart = function (labels, data) {
   const ctx = document.querySelector("#chart").getContext("2d");
