@@ -1,42 +1,45 @@
 const headerBtnContainer = document.querySelector(".header--btn-container");
 const addSessionBtn = document.querySelector(".btn--add-session");
-// const startSessionBtn = document.querySelector(".btn--start-session");
 const startStopwatchBtn = document.querySelector(".btn-start-stopwatch");
 const getTotalBtn = document.querySelector(".btn-total");
 const clearBtn = document.querySelector(".btn-clear");
 const addingSession = document.querySelector(".adding-session");
 const addingSessionForm = document.querySelector(".adding-session-form");
+const trackerSection = document.querySelector(".tracker");
 const trackerTable = document.querySelector(".tracker-table");
 const optionStopwatch = document.querySelector(".option-stopwatch");
 const descriptionFillIn = document.querySelector(".description--fill-in");
-// const descriptionClickStopwatch = document.querySelector(
-//   ".description--click-stopwatch"
-// );
 const stopwatchSection = document.querySelector(".stopwatch-section");
 const getChartBtn = document.querySelector(".btn-get-chart");
 const chartContainer = document.querySelector(".chart-container");
 
-headerBtnContainer.addEventListener("click", function (e) {
-  const btn = e.target;
-
-  if (!btn.classList.contains("btn")) return;
-
-  if (btn.classList.contains("btn--add-session")) {
-    optionStopwatch.classList.remove("hidden");
-    btn.classList.add("hidden");
-    // btn.nextElementSibling.classList.add("hidden");
-    addingSession.classList.remove("hidden");
-  }
-});
+//////////////////////////////////////////////
 
 let activities = [];
 let getTotal = false;
 let tags = [];
 
-// ***** CHART **********
-// import Chart from "chart.js/auto";
-// import ChartDataLabels from "chartjs-plugin-datalabels";
-// Chart.register(ChartDataLabels);
+const getLocalStorage = function () {
+  timieData = JSON.parse(localStorage.getItem("timie"));
+  if (timieData) activities = [...timieData];
+
+  console.log(timieData);
+};
+
+addSessionBtn.addEventListener("click", function () {
+  optionStopwatch.classList.remove("hidden");
+  addSessionBtn.classList.add("hidden");
+  addingSession.classList.remove("hidden");
+
+  if (activities.length > 0) {
+    clearBtn.classList.remove("hidden");
+    trackerSection.classList.remove("hidden");
+    descriptionFillIn.classList.add("hidden");
+    getTotalBtn.classList.remove("hidden");
+    getChartBtn.classList.remove("hidden");
+    clearBtn.textContent = "Clear All";
+  }
+});
 
 const formData = function () {
   return Array.from(addingSessionForm.querySelectorAll("input")).reduce(
@@ -49,32 +52,14 @@ const formData = function () {
     {}
   );
 };
+// ***** CHART **********
 
 import { getChart } from "./chart";
 
-// const chartData = function () {
-//   tags = activities.map((activity) => activity.tag);
-//   tags = [...new Set(tags)];
-//   // console.log(tags);
-
-//   const time = tags.map((tag) => {
-//     return activities
-//       .filter((activity) => activity.tag === tag)
-//       .reduce(
-//         (acc, activity) =>
-//           acc + Number(activity.hrs) * 60 + Number(activity.mins),
-//         0
-//       );
-//   });
-
-//   return {
-//     data: time,
-//     labels: tags,
-//   };
-// };
-const chartData = function () {
+const chartData = function (activities) {
   tags = activities.map((activity) => activity.tag);
   tags = [...new Set(tags)];
+
   // console.log(tags);
 
   const time = tags.map((tag) => {
@@ -87,73 +72,18 @@ const chartData = function () {
       );
   });
 
+  // timieData.push(tags, time);
+
   return {
     data: time,
     labels: tags,
   };
 };
 
-// const getChart = function () {
-//   // chartContainer.classList.remove("hidden");
-
-//   const ctx = document.querySelector("#chart").getContext("2d");
-
-//   let chartStatus = Chart.getChart("chart");
-
-//   if (chartStatus != undefined) {
-//     chartStatus.destroy();
-//   }
-
-//   let chart = new Chart(ctx, {
-//     type: "doughnut",
-//     data: {
-//       labels: chartData().labels,
-//       datasets: [
-//         {
-//           label: "min",
-//           data: chartData().data,
-//           backgroundColor: [
-//             "#fff",
-//             "#f8f9fa",
-//             "#f1f3f5",
-//             "#e9ecef",
-//             "#dee2e6",
-//             "#ced4da",
-//             "#adb5bd",
-//             "#868e96",
-//             "#495057",
-//           ],
-//           borderColor: ["transparent"],
-//           borderWidth: 1,
-//         },
-//       ],
-//     },
-//     options: {
-//       responsive: false,
-//       plugins: {
-//         legend: {
-//           display: true,
-//           position: "bottom",
-//           labels: {
-//             fontColor: "#333",
-//             fontSize: 16,
-//           },
-//         },
-//         datalabels: {
-//           color: "#777",
-//           formatter: (value) =>
-//             (value % 60 !== 0 ? (value / 60).toPrecision(2) : value / 60) + "h",
-//         },
-//       },
-//     },
-//   });
-//   return chartStatus;
-// };
-
 getChartBtn.addEventListener("click", function () {
   chartContainer.classList.remove("hidden");
   // getChart();
-  getChart(chartData().labels, chartData().data);
+  getChart(chartData(activities).labels, chartData(activities).data);
 });
 
 addingSessionForm.addEventListener("submit", function (e) {
@@ -164,6 +94,7 @@ addingSessionForm.addEventListener("submit", function (e) {
     chartContainer.classList.add("hidden");
   }
 
+  trackerSection.classList.remove("hidden");
   descriptionFillIn.classList.add("hidden");
 
   if (activities.length > 0) {
@@ -175,19 +106,25 @@ addingSessionForm.addEventListener("submit", function (e) {
   formData();
 
   activities.push(formData());
-
-  renderActivities();
+  renderActivities(activities);
 
   Array.from(addingSessionForm.querySelectorAll("input")).forEach(
     (input) => (input.value = "")
   );
+
+  const setLocalStorage = function () {
+    localStorage.clear();
+    localStorage.setItem("timie", JSON.stringify(activities));
+  };
+  if (activities) setLocalStorage();
+
   clearBtn.classList.remove("hidden");
 });
 
 // ***** GET TOTAL TIME **********
 getTotalBtn.addEventListener("click", function () {
   getTotal = true;
-  renderActivities();
+  renderActivities(activities);
 });
 
 // ***** CLEAR ACTIVITIES **********
@@ -198,15 +135,16 @@ const clearActivities = function () {
   getTotalBtn.classList.add("hidden");
   getChartBtn.classList.add("hidden");
 
-  getChart().destroy();
+  if (getChart()) getChart().destroy();
   chartContainer.classList.add("hidden");
+  localStorage.clear();
 };
 
 clearBtn.addEventListener("click", clearActivities);
 
 // ***** RENDERING ACTIVITIES **********
 
-const renderActivities = function () {
+const renderActivities = function (activities) {
   trackerTable.innerHTML = "";
 
   let markup =
@@ -227,17 +165,18 @@ const renderActivities = function () {
       .join("");
 
   // **Get total time
-  if (getTotal) {
-    const totalTimeDecimals = activities.reduce(
-      (acc, activity) =>
-        acc + Number(activity.hrs) * 60 + Number(activity.mins),
-      0
-    );
+  const getTotalTime = function (activities) {
+    if (getTotal) {
+      const totalTimeDecimals = activities.reduce(
+        (acc, activity) =>
+          acc + Number(activity.hrs) * 60 + Number(activity.mins),
+        0
+      );
 
-    const totalTimeHrs = Math.trunc(totalTimeDecimals / 60);
-    const totalTimeMins = totalTimeDecimals % 60;
+      const totalTimeHrs = Math.trunc(totalTimeDecimals / 60);
+      const totalTimeMins = totalTimeDecimals % 60;
 
-    markup += `
+      markup += `
     </tr>
       <td>Total Time:</td>
       <td>${(totalTimeDecimals / 60).toFixed(
@@ -245,8 +184,11 @@ const renderActivities = function () {
       )} / ${totalTimeHrs}h${totalTimeMins}m</td>
     </tr>
     `;
-    getTotal = false;
-  }
+      getTotal = false;
+    }
+  };
+  getTotalTime(activities);
+
   // console.log(markup);
 
   trackerTable.insertAdjacentHTML("beforeend", markup);
@@ -361,9 +303,12 @@ resetStopwatchBtn.addEventListener("click", function () {
   sec.innerHTML = "00";
 });
 
-// startSessionBtn.addEventListener("click", function () {
-//   stopwatchSection.classList.remove("hidden");
-// });
 startStopwatchBtn.addEventListener("click", function () {
   stopwatchSection.classList.remove("hidden");
+});
+
+// ***** LOCAL STORAGE **********
+window.addEventListener("DOMContentLoaded", function () {
+  getLocalStorage();
+  renderActivities(activities);
 });
