@@ -9,9 +9,9 @@ const addingSessionForm = document.querySelector(".adding-session-form");
 const trackerTable = document.querySelector(".tracker-table");
 const optionStopwatch = document.querySelector(".option-stopwatch");
 const descriptionFillIn = document.querySelector(".description--fill-in");
-const descriptionClickStopwatch = document.querySelector(
-  ".description--click-stopwatch"
-);
+// const descriptionClickStopwatch = document.querySelector(
+//   ".description--click-stopwatch"
+// );
 const stopwatchSection = document.querySelector(".stopwatch-section");
 const getChartBtn = document.querySelector(".btn-get-chart");
 const chartContainer = document.querySelector(".chart-container");
@@ -34,11 +34,9 @@ let getTotal = false;
 let tags = [];
 
 // ***** CHART **********
-export { activities, tags };
-// import { chart } from "/chart.js";
-import Chart from "chart.js/auto";
-import ChartDataLabels from "chartjs-plugin-datalabels";
-Chart.register(ChartDataLabels);
+// import Chart from "chart.js/auto";
+// import ChartDataLabels from "chartjs-plugin-datalabels";
+// Chart.register(ChartDataLabels);
 
 const formData = function () {
   return Array.from(addingSessionForm.querySelectorAll("input")).reduce(
@@ -52,6 +50,28 @@ const formData = function () {
   );
 };
 
+import { getChart } from "./chart";
+
+// const chartData = function () {
+//   tags = activities.map((activity) => activity.tag);
+//   tags = [...new Set(tags)];
+//   // console.log(tags);
+
+//   const time = tags.map((tag) => {
+//     return activities
+//       .filter((activity) => activity.tag === tag)
+//       .reduce(
+//         (acc, activity) =>
+//           acc + Number(activity.hrs) * 60 + Number(activity.mins),
+//         0
+//       );
+//   });
+
+//   return {
+//     data: time,
+//     labels: tags,
+//   };
+// };
 const chartData = function () {
   tags = activities.map((activity) => activity.tag);
   tags = [...new Set(tags)];
@@ -73,69 +93,76 @@ const chartData = function () {
   };
 };
 
-const getChart = function () {
-  chartContainer.classList.remove("hidden");
+// const getChart = function () {
+//   // chartContainer.classList.remove("hidden");
 
-  const ctx = document.querySelector("#chart").getContext("2d");
+//   const ctx = document.querySelector("#chart").getContext("2d");
 
-  let chartStatus = Chart.getChart("chart");
-  if (chartStatus != undefined) {
-    chartStatus.destroy();
-  }
+//   let chartStatus = Chart.getChart("chart");
 
-  chart = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels: chartData().labels,
-      datasets: [
-        {
-          label: "min",
-          data: chartData().data,
-          backgroundColor: [
-            "#fff",
-            "#f8f9fa",
-            "#f1f3f5",
-            "#e9ecef",
-            "#dee2e6",
-            "#ced4da",
-            "#adb5bd",
-            "#868e96",
-            "#495057",
-          ],
-          borderColor: ["transparent"],
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      responsive: false,
-      plugins: {
-        legend: {
-          display: true,
-          position: "bottom",
-          labels: {
-            fontColor: "#333",
-            fontSize: 16,
-          },
-        },
-        datalabels: {
-          color: "#777",
-          formatter: (value) =>
-            (value % 60 !== 0 ? (value / 60).toPrecision(2) : value / 60) + "h",
-        },
-      },
-    },
-  });
-};
+//   if (chartStatus != undefined) {
+//     chartStatus.destroy();
+//   }
+
+//   let chart = new Chart(ctx, {
+//     type: "doughnut",
+//     data: {
+//       labels: chartData().labels,
+//       datasets: [
+//         {
+//           label: "min",
+//           data: chartData().data,
+//           backgroundColor: [
+//             "#fff",
+//             "#f8f9fa",
+//             "#f1f3f5",
+//             "#e9ecef",
+//             "#dee2e6",
+//             "#ced4da",
+//             "#adb5bd",
+//             "#868e96",
+//             "#495057",
+//           ],
+//           borderColor: ["transparent"],
+//           borderWidth: 1,
+//         },
+//       ],
+//     },
+//     options: {
+//       responsive: false,
+//       plugins: {
+//         legend: {
+//           display: true,
+//           position: "bottom",
+//           labels: {
+//             fontColor: "#333",
+//             fontSize: 16,
+//           },
+//         },
+//         datalabels: {
+//           color: "#777",
+//           formatter: (value) =>
+//             (value % 60 !== 0 ? (value / 60).toPrecision(2) : value / 60) + "h",
+//         },
+//       },
+//     },
+//   });
+//   return chartStatus;
+// };
 
 getChartBtn.addEventListener("click", function () {
-  // descriptionClickStopwatch.classList.add("hidden");
-
-  getChart();
+  chartContainer.classList.remove("hidden");
+  // getChart();
+  getChart(chartData().labels, chartData().data);
 });
 
 addingSessionForm.addEventListener("submit", function (e) {
   e.preventDefault();
+
+  if (getChart() != undefined) {
+    getChart().destroy();
+    chartContainer.classList.add("hidden");
+  }
 
   descriptionFillIn.classList.add("hidden");
 
@@ -163,13 +190,16 @@ getTotalBtn.addEventListener("click", function () {
   renderActivities();
 });
 
-// ***** Clear activities **********
+// ***** CLEAR ACTIVITIES **********
 const clearActivities = function () {
   activities = [];
   trackerTable.innerHTML = "";
   clearBtn.classList.add("hidden");
   getTotalBtn.classList.add("hidden");
   getChartBtn.classList.add("hidden");
+
+  getChart().destroy();
+  chartContainer.classList.add("hidden");
 };
 
 clearBtn.addEventListener("click", clearActivities);
@@ -188,10 +218,10 @@ const renderActivities = function () {
       .map(
         (activity) => `
             <tr>
-               <td>${activity.activity !== "" ? activity.activity : "n/a"}</td>
+               <td>${activity.activity ? activity.activity : "n/a"}</td>
                 <td>${activity.hrs > 0 ? activity.hrs + "h" : ""}${
           activity.mins > 0 ? activity.mins + "m" : ""
-        }</td>
+        }${!activity.hrs && !activity.mins ? "n/a" : ""}</td>
             </tr>`
       )
       .join("");
@@ -222,7 +252,7 @@ const renderActivities = function () {
   trackerTable.insertAdjacentHTML("beforeend", markup);
 };
 
-// ***** STARTING STOPWATCH **********
+// ***** STOPWATCH **********
 
 const runStopwatchBtn = document.getElementById("run-stopwatch");
 const stopStopwatchBtn = document.getElementById("stop-stopwatch");
