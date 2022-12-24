@@ -22,6 +22,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
+  /* margin-bottom: 20px; */
 }
 
 .heading {
@@ -136,16 +137,6 @@ hr {
   width: 60px;
 }
 
-/* input[type="number"] {
-  text-align: center;
-} */
-
-/* input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  opacity: 1;
-  border-radius: 20px;
-} */
-
 .adding-session-form--btn {
   color: #fff;
   border: none;
@@ -172,11 +163,8 @@ input[type="number"]::-webkit-outer-spin-button {
   /* color: #777; */
 }
 
-.hidden {
-  display: none;
-}
-
 .chart-container {
+  margin-top: 20px;
   display: flex;
   justify-content: center;
 }
@@ -218,6 +206,11 @@ td:last-child {
   border-top-right-radius: 50px;
 }
 
-/* .stopwatch-section {
-  margin-bottom: 20px;
-} */
+.stopwatch-section,
+.option-stopwatch {
+  padding-bottom: 20px;
+}
+
+.hidden {
+  display: none;
+}

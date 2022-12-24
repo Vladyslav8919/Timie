@@ -14,7 +14,7 @@ const descriptionClickStopwatch = document.querySelector(
 );
 const stopwatchSection = document.querySelector(".stopwatch-section");
 const getChartBtn = document.querySelector(".btn-get-chart");
-// const chartContainer = document.querySelector(".chart-container");
+const chartContainer = document.querySelector(".chart-container");
 
 headerBtnContainer.addEventListener("click", function (e) {
   const btn = e.target;
@@ -33,27 +33,15 @@ let activities = [];
 let getTotal = false;
 let tags = [];
 
+// ***** CHART **********
 export { activities, tags };
-import { chart } from "/chart.js";
+// import { chart } from "/chart.js";
 import Chart from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 Chart.register(ChartDataLabels);
 
-addingSessionForm.addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  descriptionFillIn.classList.add("hidden");
-  // chartContainer.classList.add("hidden");
-
-  if (activities.length > 0) {
-    getTotalBtn.classList.remove("hidden");
-    getChartBtn.classList.remove("hidden");
-    clearBtn.textContent = "Clear all";
-  }
-
-  const formData = Array.from(
-    addingSessionForm.querySelectorAll("input")
-  ).reduce(
+const formData = function () {
+  return Array.from(addingSessionForm.querySelectorAll("input")).reduce(
     (acc, input) => ({
       ...acc,
       [input.id]: input.value,
@@ -62,111 +50,111 @@ addingSessionForm.addEventListener("submit", function (e) {
     }),
     {}
   );
-  // console.log(formData);
-  activities.push(formData);
-  // console.log(activities);
+};
 
-  renderActivities();
+const chartData = function () {
+  tags = activities.map((activity) => activity.tag);
+  tags = [...new Set(tags)];
+  // console.log(tags);
 
-  // ***** CHART **********
-  const chartData = function () {
-    tags = activities.map((activity) => activity.tag);
-    tags = [...new Set(tags)];
-    // console.log(tags);
+  const time = tags.map((tag) => {
+    return activities
+      .filter((activity) => activity.tag === tag)
+      .reduce(
+        (acc, activity) =>
+          acc + Number(activity.hrs) * 60 + Number(activity.mins),
+        0
+      );
+  });
 
-    const time = tags.map((tag) => {
-      return activities
-        .filter((activity) => activity.tag === tag)
-        .reduce(
-          (acc, activity) =>
-            acc + Number(activity.hrs) * 60 + Number(activity.mins),
-          0
-        );
-    });
-
-    return {
-      data: time,
-      labels: tags,
-    };
+  return {
+    data: time,
+    labels: tags,
   };
-  // console.log(chartData());
+};
 
-  const getChart = function () {
-    const ctx = document.querySelector("#chart").getContext("2d");
-    // let chart;
-    // if (chart != undefined) {
-    //   chart.clear();
-    //   chart.destroy();
-    // }
+const getChart = function () {
+  chartContainer.classList.remove("hidden");
 
-    let chartStatus = Chart.getChart("chart");
-    if (chartStatus != undefined) {
-      chartStatus.destroy();
-    }
+  const ctx = document.querySelector("#chart").getContext("2d");
 
-    chart = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: chartData().labels,
-        datasets: [
-          {
-            label: "min",
-            data: chartData().data,
-            backgroundColor: [
-              "#fff",
-              "#f8f9fa",
-              "#f1f3f5",
-              "#e9ecef",
-              "#dee2e6",
-              "#ced4da",
-              "#adb5bd",
-              "#868e96",
-              "#495057",
-            ],
-            borderColor: ["transparent"],
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive: false,
-        plugins: {
-          legend: {
-            display: true,
-            position: "bottom",
-            labels: {
-              fontColor: "#333",
-              fontSize: 16,
-            },
-          },
-          datalabels: {
-            color: "#777",
-            formatter: (value) =>
-              (value % 60 !== 0 ? (value / 60).toPrecision(2) : value / 60) +
-              "h",
+  let chartStatus = Chart.getChart("chart");
+  if (chartStatus != undefined) {
+    chartStatus.destroy();
+  }
+
+  chart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: chartData().labels,
+      datasets: [
+        {
+          label: "min",
+          data: chartData().data,
+          backgroundColor: [
+            "#fff",
+            "#f8f9fa",
+            "#f1f3f5",
+            "#e9ecef",
+            "#dee2e6",
+            "#ced4da",
+            "#adb5bd",
+            "#868e96",
+            "#495057",
+          ],
+          borderColor: ["transparent"],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            fontColor: "#333",
+            fontSize: 16,
           },
         },
+        datalabels: {
+          color: "#777",
+          formatter: (value) =>
+            (value % 60 !== 0 ? (value / 60).toPrecision(2) : value / 60) + "h",
+        },
       },
-    });
-    return {
-      destroy: chartStatus.destroy(),
-    };
-  };
-
-  getChartBtn.addEventListener("click", function () {
-    descriptionClickStopwatch.classList.add("hidden");
-
-    getChart();
+    },
   });
+};
+
+getChartBtn.addEventListener("click", function () {
+  // descriptionClickStopwatch.classList.add("hidden");
+
+  getChart();
+});
+
+addingSessionForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  descriptionFillIn.classList.add("hidden");
+
+  if (activities.length > 0) {
+    getTotalBtn.classList.remove("hidden");
+    getChartBtn.classList.remove("hidden");
+    clearBtn.textContent = "Clear all";
+  }
+
+  formData();
+
+  activities.push(formData());
+
+  renderActivities();
 
   Array.from(addingSessionForm.querySelectorAll("input")).forEach(
     (input) => (input.value = "")
   );
   clearBtn.classList.remove("hidden");
-
-  return {
-    destroy: chart.destroy(),
-  };
 });
 
 // ***** GET TOTAL TIME **********
@@ -236,7 +224,6 @@ const renderActivities = function () {
 
 // ***** STARTING STOPWATCH **********
 
-const stopwatchFace = document.querySelector(".stopwatch-face");
 const runStopwatchBtn = document.getElementById("run-stopwatch");
 const stopStopwatchBtn = document.getElementById("stop-stopwatch");
 const resetStopwatchBtn = document.getElementById("reset-stopwatch");
@@ -244,76 +231,109 @@ const resetStopwatchBtn = document.getElementById("reset-stopwatch");
 let hour = 0;
 let minute = 0;
 let second = 0;
-let count = 0;
-let timer = false;
-
-runStopwatchBtn.addEventListener("click", function () {
-  if (timer) return;
-  timer = true;
-  stopwatch();
-});
-
-stopStopwatchBtn.addEventListener("click", function () {
-  timer = false;
-});
 
 const hr = document.getElementById("hr");
 const min = document.getElementById("min");
 const sec = document.getElementById("sec");
 
+/**
+ * Self-adjusting interval to account for drifting
+ *
+ * @param {function} workFunc  Callback containing the work to be done
+ *                             for each interval
+ * @param {int}      interval  Interval speed (in milliseconds)
+ * @param {function} errorFunc (Optional) Callback to run if the drift
+ *                             exceeds interval
+ */
+function AdjustingInterval(workFunc, interval, errorFunc) {
+  var that = this;
+  var expected, timeout;
+  this.interval = interval;
+
+  this.start = function () {
+    if (timeout) return;
+    expected = Date.now() + this.interval;
+    timeout = setTimeout(step, this.interval);
+  };
+
+  this.stop = function () {
+    clearTimeout(timeout);
+    timeout = false;
+  };
+
+  function step() {
+    var drift = Date.now() - expected;
+    if (drift > that.interval) {
+      // You could have some default stuff here too...
+      if (errorFunc) errorFunc();
+    }
+    workFunc();
+    expected += that.interval;
+    timeout = setTimeout(step, Math.max(0, that.interval - drift));
+  }
+}
+
+// Define the work to be done
+var doWork = function () {
+  ++second;
+
+  if (second == 60) {
+    ++minute;
+    second = 0;
+  }
+
+  if (minute == 60) {
+    ++hour;
+    minute = 0;
+    second = 0;
+  }
+
+  let hrString = hour;
+  let minString = minute;
+  let secString = second;
+
+  if (hour < 10) {
+    hrString = "0" + hrString;
+  }
+  if (minute < 10) {
+    minString = "0" + minString;
+  }
+  if (second < 10) {
+    secString = "0" + secString;
+  }
+  hr.textContent = hrString;
+  min.textContent = minString;
+  sec.textContent = secString;
+};
+
+// Define what to do if something goes wrong
+var doError = function () {
+  console.warn("The drift exceeded the interval.");
+};
+
+// (The third argument is optional)
+var ticker = new AdjustingInterval(doWork, 1000, doError);
+
+runStopwatchBtn.addEventListener("click", function () {
+  ticker.start();
+});
+stopStopwatchBtn.addEventListener("click", function () {
+  ticker.stop();
+});
 resetStopwatchBtn.addEventListener("click", function () {
-  timer = false;
+  ticker.stop();
   hour = 0;
   minute = 0;
   second = 0;
-  count = 0;
+  millisecond = 0;
   hr.innerHTML = "00";
   min.innerHTML = "00";
   sec.innerHTML = "00";
 });
 
-const stopwatch = function () {
-  if (timer) {
-    count++;
-
-    if (count === 100) {
-      second++;
-      count = 0;
-    }
-    if (second === 60) {
-      minute++;
-      second = 0;
-    }
-    if (minute === 60) {
-      hour++;
-      minute = 0;
-      second = 0;
-    }
-
-    let hrString = hour;
-    let minString = minute;
-    let secString = second;
-
-    if (hour < 10) {
-      hrString = "0" + hrString;
-    }
-    if (minute < 10) {
-      minString = "0" + minString;
-    }
-    if (second < 10) {
-      secString = "0" + secString;
-    }
-    hr.textContent = hrString;
-    min.textContent = minString;
-    sec.textContent = secString;
-    setTimeout(stopwatch, 10);
-  }
-};
-
-const startStopwatch = function () {
+startSessionBtn.addEventListener("click", function () {
   stopwatchSection.classList.remove("hidden");
-  // stopwatchFace.textContext = '...'
-};
-
-startSessionBtn.addEventListener("click", startStopwatch);
-startStopwatchBtn.addEventListener("click", startStopwatch);
+});
+startStopwatchBtn.addEventListener("click", function () {
+  stopwatchSection.classList.remove("hidden");
+});
