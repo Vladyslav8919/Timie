@@ -14,6 +14,7 @@ const descriptionClickStopwatch = document.querySelector(
 );
 const stopwatchSection = document.querySelector(".stopwatch-section");
 const getChartBtn = document.querySelector(".btn-get-chart");
+// const chartContainer = document.querySelector(".chart-container");
 
 headerBtnContainer.addEventListener("click", function (e) {
   const btn = e.target;
@@ -42,6 +43,7 @@ addingSessionForm.addEventListener("submit", function (e) {
   e.preventDefault();
 
   descriptionFillIn.classList.add("hidden");
+  // chartContainer.classList.add("hidden");
 
   if (activities.length > 0) {
     getTotalBtn.classList.remove("hidden");
@@ -60,9 +62,9 @@ addingSessionForm.addEventListener("submit", function (e) {
     }),
     {}
   );
-  console.log(formData);
+  // console.log(formData);
   activities.push(formData);
-  console.log(activities);
+  // console.log(activities);
 
   renderActivities();
 
@@ -70,7 +72,7 @@ addingSessionForm.addEventListener("submit", function (e) {
   const chartData = function () {
     tags = activities.map((activity) => activity.tag);
     tags = [...new Set(tags)];
-    console.log(tags);
+    // console.log(tags);
 
     const time = tags.map((tag) => {
       return activities
@@ -82,23 +84,33 @@ addingSessionForm.addEventListener("submit", function (e) {
         );
     });
 
-    // return tags.map((tag, i) => ({ [tag]: (time[i] / 60).toFixed(2) }));
     return {
       data: time,
       labels: tags,
     };
   };
-  console.log(chartData());
+  // console.log(chartData());
 
   const getChart = function () {
-    const ctx = document.querySelector(".chart");
-    new Chart(ctx, {
+    const ctx = document.querySelector("#chart").getContext("2d");
+    // let chart;
+    // if (chart != undefined) {
+    //   chart.clear();
+    //   chart.destroy();
+    // }
+
+    let chartStatus = Chart.getChart("chart");
+    if (chartStatus != undefined) {
+      chartStatus.destroy();
+    }
+
+    chart = new Chart(ctx, {
       type: "doughnut",
       data: {
         labels: chartData().labels,
         datasets: [
           {
-            label: "# of Tomatoes",
+            label: "min",
             data: chartData().data,
             backgroundColor: [
               "#fff",
@@ -110,47 +122,14 @@ addingSessionForm.addEventListener("submit", function (e) {
               "#adb5bd",
               "#868e96",
               "#495057",
-              // "#ffa94d",
-              // "#a9e34b",
-              // "#4dabf7",
-              // "#ffd43b",
-              // "#ff8787",
-              // "#748ffc",
-              // "#da77f2",
-              // "#69db7c",
-              // "#f783ac",
-              // "#9775fa",
-              // "#38d9a9",
-              // "#3bc9db",
             ],
-            borderColor: [
-              "transparent",
-              // "rgba(255,99,132,1)",
-              // "rgba(54, 162, 235, 1)",
-              // "rgba(255, 206, 86, 1)",
-              // "rgba(75, 192, 192, 1)",
-            ],
+            borderColor: ["transparent"],
             borderWidth: 1,
           },
         ],
       },
       options: {
         responsive: false,
-        // title: {
-        //   display: true,
-        //   position: "top",
-        //   text: "Doughnut Chart",
-        //   fontSize: 18,
-        //   fontColor: "#111",
-        // },
-        // legend: {
-        //   display: true,
-        //   position: "bottom",
-        //   labels: {
-        //     fontColor: "#333",
-        //     fontSize: 16,
-        //   },
-        // },
         plugins: {
           legend: {
             display: true,
@@ -160,24 +139,23 @@ addingSessionForm.addEventListener("submit", function (e) {
               fontSize: 16,
             },
           },
-          // datalabels: {
-          //   anchor: "end",
-          //   align: "top",
-          //   formatter: Math.round,
-          //   font: {
-          //     weight: "bold",
-          //   },
-          // },
           datalabels: {
             color: "#777",
+            formatter: (value) =>
+              (value % 60 !== 0 ? (value / 60).toPrecision(2) : value / 60) +
+              "h",
           },
         },
       },
     });
+    return {
+      destroy: chartStatus.destroy(),
+    };
   };
 
   getChartBtn.addEventListener("click", function () {
     descriptionClickStopwatch.classList.add("hidden");
+
     getChart();
   });
 
@@ -185,6 +163,10 @@ addingSessionForm.addEventListener("submit", function (e) {
     (input) => (input.value = "")
   );
   clearBtn.classList.remove("hidden");
+
+  return {
+    destroy: chart.destroy(),
+  };
 });
 
 // ***** GET TOTAL TIME **********
@@ -220,7 +202,7 @@ const renderActivities = function () {
             <tr>
                <td>${activity.activity !== "" ? activity.activity : "n/a"}</td>
                 <td>${activity.hrs > 0 ? activity.hrs + "h" : ""}${
-          activity.mins > 0 ? activity.mins + "m" : "n/a"
+          activity.mins > 0 ? activity.mins + "m" : ""
         }</td>
             </tr>`
       )
@@ -247,7 +229,7 @@ const renderActivities = function () {
     `;
     getTotal = false;
   }
-  console.log(markup);
+  // console.log(markup);
 
   trackerTable.insertAdjacentHTML("beforeend", markup);
 };
