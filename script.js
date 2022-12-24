@@ -9,7 +9,11 @@ const addingSessionForm = document.querySelector(".adding-session-form");
 const trackerTable = document.querySelector(".tracker-table");
 const optionStopwatch = document.querySelector(".option-stopwatch");
 const descriptionFillIn = document.querySelector(".description--fill-in");
+const descriptionClickStopwatch = document.querySelector(
+  ".description--click-stopwatch"
+);
 const stopwatchSection = document.querySelector(".stopwatch-section");
+const getChartBtn = document.querySelector(".btn-get-chart");
 
 headerBtnContainer.addEventListener("click", function (e) {
   const btn = e.target;
@@ -26,6 +30,13 @@ headerBtnContainer.addEventListener("click", function (e) {
 
 let activities = [];
 let getTotal = false;
+let tags = [];
+
+export { activities, tags };
+import { chart } from "/chart.js";
+import Chart from "chart.js/auto";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+Chart.register(ChartDataLabels);
 
 addingSessionForm.addEventListener("submit", function (e) {
   e.preventDefault();
@@ -34,6 +45,7 @@ addingSessionForm.addEventListener("submit", function (e) {
 
   if (activities.length > 0) {
     getTotalBtn.classList.remove("hidden");
+    getChartBtn.classList.remove("hidden");
     clearBtn.textContent = "Clear all";
   }
 
@@ -43,6 +55,7 @@ addingSessionForm.addEventListener("submit", function (e) {
     (acc, input) => ({
       ...acc,
       [input.id]: input.value,
+      [input.tag]: input.value,
       id: new Date().getTime(),
     }),
     {}
@@ -52,6 +65,121 @@ addingSessionForm.addEventListener("submit", function (e) {
   console.log(activities);
 
   renderActivities();
+
+  // ***** CHART **********
+  const chartData = function () {
+    tags = activities.map((activity) => activity.tag);
+    tags = [...new Set(tags)];
+    console.log(tags);
+
+    const time = tags.map((tag) => {
+      return activities
+        .filter((activity) => activity.tag === tag)
+        .reduce(
+          (acc, activity) =>
+            acc + Number(activity.hrs) * 60 + Number(activity.mins),
+          0
+        );
+    });
+
+    // return tags.map((tag, i) => ({ [tag]: (time[i] / 60).toFixed(2) }));
+    return {
+      data: time,
+      labels: tags,
+    };
+  };
+  console.log(chartData());
+
+  const getChart = function () {
+    const ctx = document.querySelector(".chart");
+    new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: chartData().labels,
+        datasets: [
+          {
+            label: "# of Tomatoes",
+            data: chartData().data,
+            backgroundColor: [
+              "#fff",
+              "#f8f9fa",
+              "#f1f3f5",
+              "#e9ecef",
+              "#dee2e6",
+              "#ced4da",
+              "#adb5bd",
+              "#868e96",
+              "#495057",
+              // "#ffa94d",
+              // "#a9e34b",
+              // "#4dabf7",
+              // "#ffd43b",
+              // "#ff8787",
+              // "#748ffc",
+              // "#da77f2",
+              // "#69db7c",
+              // "#f783ac",
+              // "#9775fa",
+              // "#38d9a9",
+              // "#3bc9db",
+            ],
+            borderColor: [
+              "transparent",
+              // "rgba(255,99,132,1)",
+              // "rgba(54, 162, 235, 1)",
+              // "rgba(255, 206, 86, 1)",
+              // "rgba(75, 192, 192, 1)",
+            ],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: false,
+        // title: {
+        //   display: true,
+        //   position: "top",
+        //   text: "Doughnut Chart",
+        //   fontSize: 18,
+        //   fontColor: "#111",
+        // },
+        // legend: {
+        //   display: true,
+        //   position: "bottom",
+        //   labels: {
+        //     fontColor: "#333",
+        //     fontSize: 16,
+        //   },
+        // },
+        plugins: {
+          legend: {
+            display: true,
+            position: "bottom",
+            labels: {
+              fontColor: "#333",
+              fontSize: 16,
+            },
+          },
+          // datalabels: {
+          //   anchor: "end",
+          //   align: "top",
+          //   formatter: Math.round,
+          //   font: {
+          //     weight: "bold",
+          //   },
+          // },
+          datalabels: {
+            color: "#777",
+          },
+        },
+      },
+    });
+  };
+
+  getChartBtn.addEventListener("click", function () {
+    descriptionClickStopwatch.classList.add("hidden");
+    getChart();
+  });
 
   Array.from(addingSessionForm.querySelectorAll("input")).forEach(
     (input) => (input.value = "")
@@ -71,11 +199,13 @@ const clearActivities = function () {
   trackerTable.innerHTML = "";
   clearBtn.classList.add("hidden");
   getTotalBtn.classList.add("hidden");
+  getChartBtn.classList.add("hidden");
 };
 
 clearBtn.addEventListener("click", clearActivities);
 
 // ***** RENDERING ACTIVITIES **********
+
 const renderActivities = function () {
   trackerTable.innerHTML = "";
 

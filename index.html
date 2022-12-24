@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
     <link rel="stylesheet" href="style.css" />
-    <script defer src="script.js"></script>
+    <script defer type="module" src="script.js"></script>
     <title>The Timie | Track your working time</title>
   </head>
   <body>
@@ -34,7 +34,7 @@
               type="text"
               placeholder="What have you done?"
             />
-            <label for="hrs"></label>
+            <input id="tag" type="text" placeholder="Tag" />
             <input id="hrs" type="number" max="24" placeholder="Hours" />
             <input
               id="mins"
@@ -54,6 +54,9 @@
           Get total time
         </button>
         <button class="adding-session-form--btn btn-clear hidden">Clear</button>
+        <button class="adding-session-form--btn btn-get-chart hidden">
+          Get chart
+        </button>
 
         <div class="option-stopwatch hidden">
           <p class="adding-session--description description--fill-in">
@@ -84,6 +87,10 @@
             <button class="btn" id="reset-stopwatch">Reset</button>
           </div>
         </section>
+
+        <div style="display: flex; justify-content: center">
+          <canvas class="chart"></canvas>
+        </div>
       </main>
     </div>
   </body>

@@ -1,0 +1,26 @@
+{
+  "name": "timie",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "start": "parcel index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vladyslav8919/Timie.git"
+  },
+  "author": "Vladyslav Pshevlotskyi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vladyslav8919/Timie/issues"
+  },
+  "homepage": "https://github.com/Vladyslav8919/Timie#readme",
+  "dependencies": {
+    "chart.js": "^4.1.1",
+    "chartjs-plugin-datalabels": "^2.2.0"
+  },
+  "devDependencies": {
+    "parcel": "^2.8.2"
+  }
+}
