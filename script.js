@@ -93,12 +93,9 @@ getChartBtn.addEventListener("click", function () {
 addingSessionForm.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  console.log(activities);
-  console.log(edit);
   if (edit) {
     activities = activities.filter((activity) => activity.id !== +editID);
   }
-  console.log(activities);
 
   if (getChart() != undefined) {
     getChart().destroy();
@@ -141,6 +138,7 @@ getTotalBtn.addEventListener("click", function () {
 // ***** CLEAR ACTIVITIES **********
 const clearActivities = function () {
   activities = [];
+  trackerSection.classList.add("hidden");
   trackerTable.innerHTML = "";
   clearBtn.classList.add("hidden");
   getTotalBtn.classList.add("hidden");
@@ -153,16 +151,43 @@ const clearActivities = function () {
 
 clearBtn.addEventListener("click", clearActivities);
 
+// **** EDIT ACTIVITY *********
 const editActivity = function (id, activities) {
   const editedActivity = activities.find((activity) => {
     return activity.id === +id;
   });
-  console.log(editedActivity);
+  // console.log(editedActivity);
   document.getElementById("activity").value = editedActivity.activity;
   document.getElementById("tag").value = editedActivity.tag;
   document.getElementById("hrs").value = editedActivity.hrs;
   document.getElementById("mins").value = editedActivity.mins;
   edit = true;
+};
+
+// **** Delete ACTIVITY *********
+const deleteActivity = function (id, activs) {
+  activities = activs.filter((activity) => activity.id !== +id);
+  renderActivities(activities);
+
+  const setLocalStorage = function () {
+    localStorage.clear();
+    localStorage.setItem("timie", JSON.stringify(activities));
+  };
+  setLocalStorage();
+
+  if (activities.length === 1) clearBtn.textContent = "Clear";
+
+  if (activities.length === 0) {
+    trackerSection.classList.add("hidden");
+    descriptionFillIn.classList.remove("hidden");
+    trackerTable.innerHTML = "";
+    clearBtn.classList.add("hidden");
+    getTotalBtn.classList.add("hidden");
+    getChartBtn.classList.add("hidden");
+  }
+
+  if (getChart()) getChart().destroy();
+  chartContainer.classList.add("hidden");
 };
 
 // ***** RENDERING ACTIVITIES **********
@@ -179,16 +204,13 @@ const renderActivities = function (activities) {
       .map(
         (activity) => `
             <tr data-id=${activity.id}>
-               <td>${
-                 activity.activity ? activity.activity : "n/a"
-               }<span class="edit-btn">	
-✎</span></td>
+               <td>${activity.activity ? activity.activity : "n/a"}</td>
                 <td>${activity.hrs > 0 ? activity.hrs + "h" : ""}${
           activity.mins > 0 ? activity.mins + "m" : ""
-        }${!activity.hrs && !activity.mins ? "n/a" : ""}<span class="edit-btn">	
-	
-✎</span></td>
-            </tr>`
+        }${
+          !activity.hrs && !activity.mins ? "n/a" : ""
+        }<span class="icon--btn edit-btn">✎</span><span class="icon--btn delete-btn">🗑</span></td>
+           </tr>`
       )
       .join("");
 
@@ -216,8 +238,6 @@ const renderActivities = function (activities) {
     }
   };
   getTotalTime(activities);
-
-  // console.log(markup);
 
   trackerTable.insertAdjacentHTML("beforeend", markup);
 };
@@ -334,21 +354,29 @@ startStopwatchBtn.addEventListener("click", function () {
   stopwatchSection.classList.remove("hidden");
 });
 
-// ***** EDIT **********
+// ***** EDIT & DELETE**********
 document
   .querySelector(".tracker-table")
   .addEventListener("click", function (e) {
     const btn = e.target;
 
-    if (!btn.classList.contains("edit-btn")) {
-      return;
-    } else {
-      edit = true;
-
+    if (btn.classList.contains("icon--btn")) {
       const id = btn.closest("tr").dataset.id;
-      editActivity(id, activities);
-      editID = id;
-    }
+
+      // Edit
+      if (btn.classList.contains("edit-btn")) {
+        edit = true;
+        editID = id;
+        editActivity(id, activities);
+      }
+
+      // Delete
+      if (btn.classList.contains("delete-btn")) {
+        deleteActivity(id, activities);
+        // edit = true
+        // editID = id;
+      }
+    } else return;
   });
 
 // ***** LOCAL STORAGE **********

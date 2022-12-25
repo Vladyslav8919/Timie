@@ -156,6 +156,15 @@ button:focus {
   padding: 10px 5px;
   cursor: pointer;
 }
+/* input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+} */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #777;
+  -webkit-box-shadow: 0 0 0px 40rem #fff inset;
+}
 
 .btn-submit {
   background-color: #748ffc;
@@ -215,6 +224,9 @@ table {
   border-spacing: 0 8px;
   /* margin-top: -10px; correct offset on first border spacing if desired */
 }
+td {
+  position: relative;
+}
 td:first-child {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
@@ -242,12 +254,34 @@ td:last-child {
 .edit-btn {
   display: inline-block;
   position: absolute;
+  right: 30px;
   transform: scaleX(-1);
+  color: #ced4da;
+  opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease-in-out;
 }
-td:hover .edit-btn {
+tr:hover .edit-btn {
+  /* display: inline; */
+
+  visibility: visible;
+  opacity: 1;
+  cursor: pointer;
+}
+.delete-btn {
+  display: inline-block;
+  position: absolute;
+  right: 15px;
+  font-weight: 600;
+  color: #ced4da;
+  /* transform: scaleX(-1); */
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
+tr:hover .delete-btn {
   /* display: inline; */
   visibility: visible;
+  opacity: 1;
   cursor: pointer;
 }
