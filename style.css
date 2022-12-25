@@ -11,7 +11,7 @@ body {
   font-size: 16px;
   line-height: 1.7;
   color: #777;
-  padding: 30px; /*???*/
+  padding: 30px;
   background-color: #bac8ff;
 }
 .container {
@@ -22,7 +22,6 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  /* margin-bottom: 20px; */
 }
 
 .heading {
@@ -46,11 +45,9 @@ body {
 }
 
 .heading-primary-sub {
-  /* color: white; */
   font-style: italic;
   display: block;
   font-size: 20px;
-  /* font-weight: 700; */
   letter-spacing: 17.4px;
 }
 
@@ -58,50 +55,45 @@ body {
   width: 40%;
 }
 
+hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 20px 0;
+}
+
 .tracker {
   display: flex;
   justify-content: center;
-  /* background-color: #fff; */
-  /* border-radius: 20px; */
 }
 
 .btn,
 .btn:link,
 .btn:visited {
-  /* text-transform: capitalize; */
-  letter-spacing: 1px;
-  text-decoration: none;
-  padding: 15px 40px;
   display: inline-block;
-  border-radius: 100px;
-  transition: all 0.2s;
-  position: relative;
-  border: none;
-  box-shadow: rgba(0, 0, 0, 0.015);
   color: #777;
   background-color: #edf2ff;
+  text-decoration: none;
+  box-shadow: rgba(0, 0, 0, 0.015);
+  letter-spacing: 1px;
+  padding: 15px 40px;
+  border-radius: 100px;
+  border: none;
   cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
 }
 
 .btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
-
 .btn:active {
   transform: translateY(-1px);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
-
 .btn-white {
   background-color: #fff;
   color: #777;
-}
-
-hr {
-  border: none;
-  border-top: 1px solid #eee;
-  margin: 20px 0;
 }
 
 /* Adding Session */
@@ -111,9 +103,9 @@ hr {
 }
 
 .adding-session--description {
-  margin-bottom: 5px;
-  letter-spacing: 1.2px;
   color: #f8f9fa;
+  letter-spacing: 1.2px;
+  margin-bottom: 5px;
 }
 
 .description--fill-in {
@@ -122,13 +114,12 @@ hr {
 
 .adding-session input {
   background-color: #fff;
-  border: none;
-  border-radius: 50px;
-  padding: 10px 0;
-  text-align: center;
   color: #777;
-  border-radius: 2rem;
   box-shadow: rgba(0, 0, 0, 0.045);
+  border: none;
+  border-radius: 2rem;
+  text-align: center;
+  padding: 10px 0;
 }
 .adding-session input:focus {
   outline: 5px solid rgba(247, 235, 252, 0.676);
@@ -143,22 +134,19 @@ button:focus {
   text-align: center;
   padding-left: 13px;
 }
-
 #tag {
   width: 60px;
 }
 
 .adding-session-form--btn {
   color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.045);
+  cursor: pointer;
   border: none;
   border-radius: 50px;
-  box-shadow: rgba(0, 0, 0, 0.045);
   padding: 10px 5px;
-  cursor: pointer;
 }
-/* input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0px 1000px #fff inset;
-} */
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
@@ -168,16 +156,13 @@ input:-webkit-autofill:focus {
 
 .btn-submit {
   background-color: #748ffc;
-  /* color: #777; */
   letter-spacing: 1px;
 }
 .btn-start-stopwatch {
-  background-color: #ff6b6b;
   background-color: #edf2ff;
   color: #777;
 }
 .btn-total {
-  background-color: #f8f9fa;
   background-color: #748ffc;
 }
 .btn-clear {
@@ -185,26 +170,22 @@ input:-webkit-autofill:focus {
   color: #777;
 }
 .btn-get-chart {
-  background-color: #f1f3f5;
   background-color: #f06595;
-  /* color: #777; */
 }
 
 .chart-container {
-  margin-top: 20px;
   display: flex;
   justify-content: center;
+  margin-top: 20px;
 }
 
-/* Adding activity Table */
 table {
-  /* font-family: arial, sans-serif; */
+  width: 65%;
   background-color: #fff;
   margin: 20px 0;
   border-collapse: collapse;
   border-radius: 1.5em;
   overflow: hidden;
-  width: 65%;
 }
 
 td,
@@ -222,7 +203,6 @@ tr:nth-child(even) {
 table {
   border-collapse: separate;
   border-spacing: 0 8px;
-  /* margin-top: -10px; correct offset on first border spacing if desired */
 }
 td {
   position: relative;
@@ -247,10 +227,6 @@ td:last-child {
   margin-bottom: 5px;
 }
 
-.hidden {
-  display: none;
-}
-
 .edit-btn {
   display: inline-block;
   position: absolute;
@@ -262,8 +238,6 @@ td:last-child {
   transition: all 0.3s ease-in-out;
 }
 tr:hover .edit-btn {
-  /* display: inline; */
-
   visibility: visible;
   opacity: 1;
   cursor: pointer;
@@ -274,14 +248,16 @@ tr:hover .edit-btn {
   right: 15px;
   font-weight: 600;
   color: #ced4da;
-  /* transform: scaleX(-1); */
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease-in-out;
 }
 tr:hover .delete-btn {
-  /* display: inline; */
   visibility: visible;
   opacity: 1;
   cursor: pointer;
+}
+
+.hidden {
+  display: none;
 }
