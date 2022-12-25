@@ -12,11 +12,14 @@ const descriptionFillIn = document.querySelector(".description--fill-in");
 const stopwatchSection = document.querySelector(".stopwatch-section");
 const getChartBtn = document.querySelector(".btn-get-chart");
 const chartContainer = document.querySelector(".chart-container");
+const editBtn = document.querySelector(".edit-btn");
 
 //////////////////////////////////////////////
 
 let activities = [];
 let getTotal = false;
+let edit = false;
+let editID;
 let tags = [];
 let timieData;
 
@@ -90,6 +93,13 @@ getChartBtn.addEventListener("click", function () {
 addingSessionForm.addEventListener("submit", function (e) {
   e.preventDefault();
 
+  console.log(activities);
+  console.log(edit);
+  if (edit) {
+    activities = activities.filter((activity) => activity.id !== +editID);
+  }
+  console.log(activities);
+
   if (getChart() != undefined) {
     getChart().destroy();
     chartContainer.classList.add("hidden");
@@ -143,6 +153,18 @@ const clearActivities = function () {
 
 clearBtn.addEventListener("click", clearActivities);
 
+const editActivity = function (id, activities) {
+  const editedActivity = activities.find((activity) => {
+    return activity.id === +id;
+  });
+  console.log(editedActivity);
+  document.getElementById("activity").value = editedActivity.activity;
+  document.getElementById("tag").value = editedActivity.tag;
+  document.getElementById("hrs").value = editedActivity.hrs;
+  document.getElementById("mins").value = editedActivity.mins;
+  edit = true;
+};
+
 // ***** RENDERING ACTIVITIES **********
 
 const renderActivities = function (activities) {
@@ -156,11 +178,16 @@ const renderActivities = function (activities) {
     activities
       .map(
         (activity) => `
-            <tr>
-               <td>${activity.activity ? activity.activity : "n/a"}</td>
+            <tr data-id=${activity.id}>
+               <td>${
+                 activity.activity ? activity.activity : "n/a"
+               }<span class="edit-btn">	
+✎</span></td>
                 <td>${activity.hrs > 0 ? activity.hrs + "h" : ""}${
           activity.mins > 0 ? activity.mins + "m" : ""
-        }${!activity.hrs && !activity.mins ? "n/a" : ""}</td>
+        }${!activity.hrs && !activity.mins ? "n/a" : ""}<span class="edit-btn">	
+	
+✎</span></td>
             </tr>`
       )
       .join("");
@@ -306,6 +333,23 @@ resetStopwatchBtn.addEventListener("click", function () {
 startStopwatchBtn.addEventListener("click", function () {
   stopwatchSection.classList.remove("hidden");
 });
+
+// ***** EDIT **********
+document
+  .querySelector(".tracker-table")
+  .addEventListener("click", function (e) {
+    const btn = e.target;
+
+    if (!btn.classList.contains("edit-btn")) {
+      return;
+    } else {
+      edit = true;
+
+      const id = btn.closest("tr").dataset.id;
+      editActivity(id, activities);
+      editID = id;
+    }
+  });
 
 // ***** LOCAL STORAGE **********
 window.addEventListener("DOMContentLoaded", function () {

@@ -238,3 +238,16 @@ td:last-child {
 .hidden {
   display: none;
 }
+
+.edit-btn {
+  display: inline-block;
+  position: absolute;
+  transform: scaleX(-1);
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
+td:hover .edit-btn {
+  /* display: inline; */
+  visibility: visible;
+  cursor: pointer;
+}
